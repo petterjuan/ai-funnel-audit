@@ -39,7 +39,6 @@
             padding: 0 20px;
         }
 
-        /* Navigation */
         .nav {
             position: fixed;
             top: 0;
@@ -95,7 +94,6 @@
             transform: translateY(-2px);
         }
 
-        /* Hero Section */
         .hero {
             padding: 120px 0 80px;
             text-align: center;
@@ -134,7 +132,6 @@
             opacity: 0.9;
         }
 
-        /* Sections */
         .section {
             padding: 80px 0;
             background: var(--background);
@@ -152,7 +149,6 @@
             color: var(--text);
         }
 
-        /* Process Steps */
         .process-steps {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -202,7 +198,6 @@
             color: var(--text);
         }
 
-        /* Interactive Calculator */
         .calculator {
             background: white;
             padding: 3rem;
@@ -251,7 +246,6 @@
             margin: 0.5rem 0;
         }
 
-        /* Testimonials */
         .testimonials {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -276,7 +270,6 @@
             color: var(--text);
         }
 
-        /* FAQ */
         .faq-item {
             background: white;
             margin-bottom: 1rem;
@@ -307,7 +300,6 @@
             max-height: 500px;
         }
 
-        /* Footer */
         .footer {
             background: var(--text);
             color: white;
@@ -332,7 +324,6 @@
             color: var(--accent);
         }
 
-        /* Animations */
         @keyframes fadeInUp {
             from {
                 opacity: 0;
@@ -348,7 +339,6 @@
             animation: fadeInUp 0.6s ease-out;
         }
 
-        /* Responsive */
         @media (max-width: 768px) {
             .hero h1 {
                 font-size: 2.5rem;
@@ -365,7 +355,6 @@
     </style>
 </head>
 <body>
-    <!-- Navigation -->
     <nav class="nav">
         <div class="container">
             <div class="nav-content">
@@ -381,7 +370,6 @@
         </div>
     </nav>
 
-    <!-- Hero Section -->
     <section class="hero">
         <div id="canvas-container"></div>
         <div class="container">
@@ -393,7 +381,6 @@
         </div>
     </section>
 
-    <!-- Process Section -->
     <section id="process" class="section">
         <div class="container">
             <h2 class="section-title">The AI Funnel Audit Process</h2>
@@ -435,7 +422,6 @@
         </div>
     </section>
 
-    <!-- ROI Calculator -->
     <section id="calculator" class="section section-alt">
         <div class="container">
             <h2 class="section-title">Calculate Your Potential ROI</h2>
@@ -463,7 +449,6 @@
         </div>
     </section>
 
-    <!-- Testimonials -->
     <section id="testimonials" class="section">
         <div class="container">
             <h2 class="section-title">Real Results</h2>
@@ -484,7 +469,6 @@
         </div>
     </section>
 
-    <!-- FAQ -->
     <section id="faq" class="section section-alt">
         <div class="container">
             <h2 class="section-title">Frequently Asked Questions</h2>
@@ -520,7 +504,6 @@
         </div>
     </section>
 
-    <!-- Final CTA -->
     <section id="audit" class="section" style="background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%); color: white;">
         <div class="container">
             <div style="text-align: center; max-width: 600px; margin: 0 auto;">
@@ -552,7 +535,6 @@
         </div>
     </section>
 
-    <!-- Footer -->
     <footer class="footer">
         <div class="container">
             <div class="logo" style="color: white; margin-bottom: 1rem;">Juan Petter</div>
@@ -566,7 +548,6 @@
     </footer>
 
     <script>
-        // 3D Background Animation
         function initBackground() {
             const container = document.getElementById('canvas-container');
             const scene = new THREE.Scene();
@@ -576,7 +557,6 @@
             renderer.setSize(window.innerWidth, window.innerHeight);
             container.appendChild(renderer.domElement);
             
-            // Create particles
             const particlesGeometry = new THREE.BufferGeometry();
             const particlesCount = 1000;
             
@@ -618,14 +598,13 @@
             });
         }
 
-        // ROI Calculator
         function calculateROI() {
             const leads = parseInt(document.getElementById('monthlyLeads').value);
             const rate = parseFloat(document.getElementById('conversionRate').value) / 100;
             const value = parseInt(document.getElementById('averageValue').value);
             
             const currentRevenue = leads * rate * value;
-            const improvedRate = rate * 1.15; // 15% improvement
+            const improvedRate = rate * 1.15;
             const newRevenue = leads * improvedRate * value;
             const increase = newRevenue - currentRevenue;
             
@@ -633,12 +612,10 @@
             document.getElementById('roiResult').style.display = 'block';
         }
 
-        // FAQ Toggle
         function toggleFAQ(element) {
             const answer = element.nextElementSibling;
             const isActive = answer.classList.contains('active');
             
-            // Close all FAQs
             document.querySelectorAll('.faq-answer').forEach(faq => {
                 faq.classList.remove('active');
             });
@@ -647,14 +624,12 @@
                 span.textContent = '+';
             });
             
-            // Open clicked FAQ if it wasn't active
             if (!isActive) {
                 answer.classList.add('active');
                 element.querySelector('span').textContent = '−';
             }
         }
 
-        // Scroll Animations
         function checkScroll() {
             const elements = document.querySelectorAll('.fade-in');
             elements.forEach(element => {
@@ -666,11 +641,9 @@
             });
         }
 
-        // Initialize
         document.addEventListener('DOMContentLoaded', function() {
             initBackground();
             
-            // Set initial state for fade-in elements
             document.querySelectorAll('.fade-in').forEach(element => {
                 element.style.opacity = '0';
                 element.style.transform = 'translateY(30px)';
@@ -678,10 +651,9 @@
             });
             
             window.addEventListener('scroll', checkScroll);
-            checkScroll(); // Initial check
+            checkScroll();
         });
 
-        // Smooth scrolling for navigation links
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
                 e.preventDefault();
