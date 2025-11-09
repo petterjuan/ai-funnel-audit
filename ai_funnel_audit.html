@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Funnel Audit | Juan Petter - AI Engineer</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --secondary: #7c3aed;
+            --accent: #06b6d4;
+            --text: #1f2937;
+            --text-light: #6b7280;
+            --background: #ffffff;
+            --background-alt: #f8fafc;
+            --border: #e5e7eb;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            color: var(--text);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Navigation */
+        .nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            padding: 1rem 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .nav-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text);
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+
+        .cta-button {
+            background: var(--primary);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .cta-button:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: 120px 0 80px;
+            text-align: center;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        #canvas-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            line-height: 1.1;
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+
+        /* Sections */
+        .section {
+            padding: 80px 0;
+            background: var(--background);
+        }
+
+        .section-alt {
+            background: var(--background-alt);
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 3rem;
+            color: var(--text);
+        }
+
+        /* Process Steps */
+        .process-steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .step {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            border: 1px solid var(--border);
+            transition: transform 0.3s, box-shadow 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .step:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .step-number {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: var(--primary);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+        }
+
+        .step-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .step h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--text);
+        }
+
+        /* Interactive Calculator */
+        .calculator {
+            background: white;
+            padding: 3rem;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            margin: 2rem auto;
+            max-width: 600px;
+        }
+
+        .calculator h3 {
+            text-align: center;
+            margin-bottom: 2rem;
+            color: var(--text);
+        }
+
+        .calculator-input {
+            margin-bottom: 1.5rem;
+        }
+
+        .calculator-input label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .calculator-input input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 1rem;
+        }
+
+        .calculator-result {
+            background: var(--background-alt);
+            padding: 1.5rem;
+            border-radius: 8px;
+            text-align: center;
+            margin-top: 1.5rem;
+        }
+
+        .roi-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin: 0.5rem 0;
+        }
+
+        /* Testimonials */
+        .testimonials {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .testimonial {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            border-left: 4px solid var(--primary);
+        }
+
+        .testimonial-text {
+            font-style: italic;
+            margin-bottom: 1rem;
+        }
+
+        .testimonial-author {
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        /* FAQ */
+        .faq-item {
+            background: white;
+            margin-bottom: 1rem;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid var(--border);
+        }
+
+        .faq-question {
+            padding: 1.5rem;
+            background: var(--background-alt);
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+        }
+
+        .faq-answer {
+            padding: 0 1.5rem;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s, padding 0.3s;
+        }
+
+        .faq-answer.active {
+            padding: 1.5rem;
+            max-height: 500px;
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--text);
+            color: white;
+            padding: 3rem 0;
+            text-align: center;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .footer-links a {
+            color: white;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-links a:hover {
+            color: var(--accent);
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in {
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .nav-links {
+                display: none;
+            }
+            
+            .section-title {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="nav">
+        <div class="container">
+            <div class="nav-content">
+                <div class="logo">Juan Petter | AI Engineer</div>
+                <div class="nav-links">
+                    <a href="#process">Process</a>
+                    <a href="#calculator">ROI Calculator</a>
+                    <a href="#testimonials">Results</a>
+                    <a href="#faq">FAQ</a>
+                    <a href="#audit" class="cta-button">Get Audit</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div id="canvas-container"></div>
+        <div class="container">
+            <div class="hero-content">
+                <h1>Your Funnel is Leaking Revenue</h1>
+                <p>Let's plug the holes with AI-powered automation. Get a complete blueprint to scale your revenue, not your workload.</p>
+                <a href="#audit" class="cta-button" style="background: var(--accent);">Get Your AI Funnel Audit</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Process Section -->
+    <section id="process" class="section">
+        <div class="container">
+            <h2 class="section-title">The AI Funnel Audit Process</h2>
+            <div class="process-steps">
+                <div class="step fade-in">
+                    <div class="step-number">1</div>
+                    <div class="step-icon">🔍</div>
+                    <h3>Deep-Dive Analysis</h3>
+                    <p>We analyze your entire customer journey to identify exactly where you're losing conversions and revenue.</p>
+                    <ul>
+                        <li>Bottleneck identification</li>
+                        <li>Tech stack review</li>
+                        <li>Process & data audit</li>
+                    </ul>
+                </div>
+                <div class="step fade-in">
+                    <div class="step-number">2</div>
+                    <div class="step-icon">💡</div>
+                    <h3>AI Opportunity Mapping</h3>
+                    <p>We pinpoint your top 3 high-impact automation opportunities with clear ROI projections.</p>
+                    <ul>
+                        <li>Lead qualification agents</li>
+                        <li>Personalization engines</li>
+                        <li>Recovery automation</li>
+                    </ul>
+                </div>
+                <div class="step fade-in">
+                    <div class="step-number">3</div>
+                    <div class="step-icon">🚀</div>
+                    <h3>Implementation Blueprint</h3>
+                    <p>Get a complete technical specification and phased implementation roadmap.</p>
+                    <ul>
+                        <li>Technical architecture</li>
+                        <li>ROI justification</li>
+                        <li>Deployment timeline</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ROI Calculator -->
+    <section id="calculator" class="section section-alt">
+        <div class="container">
+            <h2 class="section-title">Calculate Your Potential ROI</h2>
+            <div class="calculator">
+                <h3>AI Automation ROI Calculator</h3>
+                <div class="calculator-input">
+                    <label for="monthlyLeads">Monthly Leads/Visitors</label>
+                    <input type="number" id="monthlyLeads" value="1000" min="100">
+                </div>
+                <div class="calculator-input">
+                    <label for="conversionRate">Current Conversion Rate (%)</label>
+                    <input type="number" id="conversionRate" value="2" min="0.1" step="0.1">
+                </div>
+                <div class="calculator-input">
+                    <label for="averageValue">Average Customer Value ($)</label>
+                    <input type="number" id="averageValue" value="1000" min="10">
+                </div>
+                <button class="cta-button" onclick="calculateROI()" style="width: 100%;">Calculate ROI</button>
+                <div class="calculator-result" id="roiResult" style="display: none;">
+                    <h4>Potential Monthly Revenue Increase</h4>
+                    <div class="roi-number" id="roiNumber">$0</div>
+                    <p>Based on conservative 15% conversion improvement</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials -->
+    <section id="testimonials" class="section">
+        <div class="container">
+            <h2 class="section-title">Real Results</h2>
+            <div class="testimonials">
+                <div class="testimonial fade-in">
+                    <div class="testimonial-text">
+                        "The AI Funnel Audit identified $45k in monthly lost revenue we didn't know existed. Implementation paid for itself in 2 weeks."
+                    </div>
+                    <div class="testimonial-author">- SaaS Founder</div>
+                </div>
+                <div class="testimonial fade-in">
+                    <div class="testimonial-text">
+                        "Juan's automation blueprint reduced our manual follow-up by 80% and increased qualified leads by 3x. Game-changing."
+                    </div>
+                    <div class="testimonial-author">- E-commerce Director</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ -->
+    <section id="faq" class="section section-alt">
+        <div class="container">
+            <h2 class="section-title">Frequently Asked Questions</h2>
+            <div class="faq-list">
+                <div class="faq-item">
+                    <div class="faq-question" onclick="toggleFAQ(this)">
+                        How long does the audit take?
+                        <span>+</span>
+                    </div>
+                    <div class="faq-answer">
+                        The complete AI Funnel Audit process takes exactly one week from kickoff call to delivered blueprint.
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question" onclick="toggleFAQ(this)">
+                        What's included in the $3,500 audit?
+                        <span>+</span>
+                    </div>
+                    <div class="faq-answer">
+                        Comprehensive analysis, 2 strategy calls, and a detailed technical blueprint with ROI projections and implementation roadmap.
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question" onclick="toggleFAQ(this)">
+                        Do you implement the solutions?
+                        <span>+</span>
+                    </div>
+                    <div class="faq-answer">
+                        The audit includes the blueprint. Implementation can be done by your team, or we can discuss a separate engagement for building the solutions.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Final CTA -->
+    <section id="audit" class="section" style="background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%); color: white;">
+        <div class="container">
+            <div style="text-align: center; max-width: 600px; margin: 0 auto;">
+                <h2 class="section-title" style="color: white;">Ready to Systemize Your Growth?</h2>
+                <p style="margin-bottom: 2rem; font-size: 1.2rem;">Stop leaving money on the table. Get your custom AI automation blueprint.</p>
+                
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 2rem;">
+                    <div style="text-align: left;">
+                        <h4 style="margin-bottom: 1rem;">What You Get:</h4>
+                        <ul style="list-style: none;">
+                            <li>✓ Complete funnel analysis</li>
+                            <li>✓ 3 prioritized AI opportunities</li>
+                            <li>✓ Technical implementation blueprint</li>
+                            <li>✓ ROI projections</li>
+                            <li>✓ 2 strategy calls</li>
+                        </ul>
+                    </div>
+                    <div style="text-align: left;">
+                        <h4 style="margin-bottom: 1rem;">Investment:</h4>
+                        <div style="font-size: 2rem; font-weight: 700; margin-bottom: 0.5rem;">$3,500</div>
+                        <div style="opacity: 0.9;">One-time • Introductory Price</div>
+                    </div>
+                </div>
+                
+                <a href="#" class="cta-button" style="background: var(--accent); font-size: 1.2rem; padding: 1rem 2rem;">
+                    Schedule Your Intro Call
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="logo" style="color: white; margin-bottom: 1rem;">Juan Petter</div>
+            <p>AI Engineer & Cloud Architect | Building Scalable Agentic Systems</p>
+            <div class="footer-links">
+                <a href="https://linkedin.com/in/petterjuan">LinkedIn</a>
+                <a href="https://github.com/petterjuan">GitHub</a>
+                <a href="mailto:your-email@example.com">Email</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // 3D Background Animation
+        function initBackground() {
+            const container = document.getElementById('canvas-container');
+            const scene = new THREE.Scene();
+            const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            const renderer = new THREE.WebGLRenderer({ alpha: true });
+            
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            container.appendChild(renderer.domElement);
+            
+            // Create particles
+            const particlesGeometry = new THREE.BufferGeometry();
+            const particlesCount = 1000;
+            
+            const posArray = new Float32Array(particlesCount * 3);
+            
+            for(let i = 0; i < particlesCount * 3; i++) {
+                posArray[i] = (Math.random() - 0.5) * 5;
+            }
+            
+            particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+            
+            const particlesMaterial = new THREE.PointsMaterial({
+                size: 0.005,
+                color: 0xffffff,
+                transparent: true,
+                opacity: 0.6
+            });
+            
+            const particlesMesh = new THREE.Points(particlesGeometry, particlesMaterial);
+            scene.add(particlesMesh);
+            
+            camera.position.z = 2;
+            
+            function animate() {
+                requestAnimationFrame(animate);
+                
+                particlesMesh.rotation.x += 0.0005;
+                particlesMesh.rotation.y += 0.001;
+                
+                renderer.render(scene, camera);
+            }
+            
+            animate();
+            
+            window.addEventListener('resize', () => {
+                camera.aspect = window.innerWidth / window.innerHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(window.innerWidth, window.innerHeight);
+            });
+        }
+
+        // ROI Calculator
+        function calculateROI() {
+            const leads = parseInt(document.getElementById('monthlyLeads').value);
+            const rate = parseFloat(document.getElementById('conversionRate').value) / 100;
+            const value = parseInt(document.getElementById('averageValue').value);
+            
+            const currentRevenue = leads * rate * value;
+            const improvedRate = rate * 1.15; // 15% improvement
+            const newRevenue = leads * improvedRate * value;
+            const increase = newRevenue - currentRevenue;
+            
+            document.getElementById('roiNumber').textContent = '$' + increase.toLocaleString();
+            document.getElementById('roiResult').style.display = 'block';
+        }
+
+        // FAQ Toggle
+        function toggleFAQ(element) {
+            const answer = element.nextElementSibling;
+            const isActive = answer.classList.contains('active');
+            
+            // Close all FAQs
+            document.querySelectorAll('.faq-answer').forEach(faq => {
+                faq.classList.remove('active');
+            });
+            
+            document.querySelectorAll('.faq-question span').forEach(span => {
+                span.textContent = '+';
+            });
+            
+            // Open clicked FAQ if it wasn't active
+            if (!isActive) {
+                answer.classList.add('active');
+                element.querySelector('span').textContent = '−';
+            }
+        }
+
+        // Scroll Animations
+        function checkScroll() {
+            const elements = document.querySelectorAll('.fade-in');
+            elements.forEach(element => {
+                const position = element.getBoundingClientRect();
+                if (position.top < window.innerHeight - 100) {
+                    element.style.opacity = '1';
+                    element.style.transform = 'translateY(0)';
+                }
+            });
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            initBackground();
+            
+            // Set initial state for fade-in elements
+            document.querySelectorAll('.fade-in').forEach(element => {
+                element.style.opacity = '0';
+                element.style.transform = 'translateY(30px)';
+                element.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            });
+            
+            window.addEventListener('scroll', checkScroll);
+            checkScroll(); // Initial check
+        });
+
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
